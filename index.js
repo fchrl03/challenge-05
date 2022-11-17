@@ -11,6 +11,24 @@ app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(formidable());
 
+const getCarsHandler = (req, res) => {
+  cars.findAll().then((car) => {
+    res.status(200).json(car);
+  });
+};
+
+const getDetailCarsHandler = (req, res) => {
+  cars
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then((car) => {
+      res.status(200).json(car);
+    });
+};
+
 const createCarsHandler = (req, res) => {
   const fileToUpload = req.file;
 
@@ -41,7 +59,20 @@ const createCarsHandler = (req, res) => {
   });
 };
 
+const deleteCarsHandler = (req, res) => {
+  cars
+    .findOne({
+      where: {
+        id: req.params.id,
+      },
+    })
+    .then(() => console.log('Berhasil menghapus data'));
+};
+
+app.get('/cars', getCarsHandler);
+app.get('cars/:id', getDetailCarsHandler);
 app.post('/cars', upload.single('picture'), createCarsHandler);
+app.delete('/cars/:id', deleteCarsHandler);
 
 app.listen(port, () => {
   console.log('Server running at http://localhost:8000');
