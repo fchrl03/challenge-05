@@ -18,15 +18,10 @@ const getCarsHandler = (req, res) => {
 };
 
 const getDetailCarsHandler = (req, res) => {
-  cars
-    .findOne({
-      where: {
-        id: req.params.id,
-      },
-    })
-    .then((car) => {
-      res.status(200).json(car);
-    });
+  // console.log(req.query);
+  cars.findByPk(req.params.id).then((car) => {
+    res.status(200).json(car);
+  });
 };
 
 const createCarsHandler = (req, res) => {
@@ -59,21 +54,44 @@ const createCarsHandler = (req, res) => {
   });
 };
 
+const updateCarHandler = (req, res) => {
+  cars
+    .update(
+      {
+        name: req.body.name,
+        rent_price: req.body.rent_price,
+        size: req.body.size,
+        image_url: result.url,
+      },
+      {
+        where: { id: req.params.id },
+      }
+    )
+    .then((car) => {
+      res.status(201).json(car);
+    })
+    .catch((err) => {
+      res.status(422).json("Can't update cars");
+    });
+};
+
 const deleteCarsHandler = (req, res) => {
   cars
-    .findOne({
-      where: {
-        id: req.params.id,
-      },
+    .destroy({
+      where: { id: req.params.id },
     })
-    .then(() => console.log('Berhasil menghapus data'));
+    .then(() => res.status(200).send('Berhasil menghapus data'))
+    .catch((err) => {
+      res.status(404).send(err);
+    });
 };
 
 app.get('/cars', getCarsHandler);
-app.get('cars/:id', getDetailCarsHandler);
+app.get('/cars/:id', getDetailCarsHandler);
 app.post('/cars', upload.single('picture'), createCarsHandler);
+app.put('/cars/:id', updateCarHandler);
 app.delete('/cars/:id', deleteCarsHandler);
 
 app.listen(port, () => {
-  console.log('Server running at http://localhost:8000');
+  console.log(`Server running at http://localhost:${port}`);
 });
