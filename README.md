@@ -1,4 +1,4 @@
-# Binar: Challenge 05
+# Binar: Challenge
 
 - Gunakan middleware `express.json()` untuk memenuhi kebutuhan manajemen data mobil melalui REST API!
 - Gunakan `sequelize` sebagai modul yang digunakan untuk mengurus koneksi ke database!
